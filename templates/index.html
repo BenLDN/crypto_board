@@ -1,0 +1,45 @@
+<!doctype html>
+
+<style>
+  .bordered {
+    width: 500px;
+    height: 75px;
+    padding: 5px;
+    border: 3px solid black;
+  }
+</style>
+
+<html>
+   	<body>
+   	<h1>Crypto Message Board</h1>
+	<h2>New Message</h2>
+	<form action="{{ url_for('new_msg') }}" method="POST">
+	 	Name:<br>
+	 	<input type="text" name="name" size="50" value="Anon">
+	 	<br>
+	 	Message:<br>
+	 	<textarea name="msg_content" rows="5" cols="50">Enter text here...</textarea>
+	 	<br><br>
+	 	<input type="submit" value="Submit">
+	</form> 
+
+	<h2>Message List</h2>
+	<a href="{{ url_for('clear') }}">clear messages</a>
+	<br><br>
+
+	{% for row in rows %}
+
+	<div class="bordered">
+		<b> {{ row["name"] }} </b><br>
+		<i> Date: {{ row["msg_date"] }} </i><br>
+		<i> BTC Price: {{ row["price"] }} </i><br>
+		{{ row["msg_content"] }}
+
+	</div>
+	<br>
+
+	{% endfor %}
+      
+   	</body>
+	
+</html>
