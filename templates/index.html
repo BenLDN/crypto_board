@@ -12,16 +12,30 @@
 <html>
    	<body>
    	<h1>Crypto Message Board</h1>
-	<h2>New Message</h2>
+	
+    {% if session.get("current_user", None) == None %}
+            <form action="/login" method="post">
+                <input type="text" name="usr_name" placeholder="User Name">
+                <input type="password" name="usr_pw" placeholder="Password">
+                <button type="submit">Log In</button>
+            </form>
+    {% else %}
+    	<li>
+          <a><b>{{ session.get("current_user") }}</b></a></li>
+          <li><a href="/logout"><b><u>Logout</u></b></a>
+      	</li>
+
+    <h2>New Message</h2>
 	<form action="{{ url_for('new_msg') }}" method="POST">
-	 	Name:<br>
-	 	<input type="text" name="name" size="50" value="Anon">
-	 	<br>
 	 	Message:<br>
 	 	<textarea name="msg_content" rows="5" cols="50">Enter text here...</textarea>
 	 	<br><br>
 	 	<input type="submit" value="Submit">
 	</form> 
+    {% endif %}
+
+
+
 
 	<h2>Message List</h2>
 	<a href="{{ url_for('clear') }}">clear messages</a>
