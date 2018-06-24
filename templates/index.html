@@ -3,7 +3,7 @@
 <style>
   .bordered {
     width: 500px;
-    height: 75px;
+    height: 100px;
     padding: 5px;
     border: 3px solid black;
   }
@@ -15,20 +15,20 @@
 	
     {% if session.get("current_user", None) == None %}
             <form action="/login" method="post">
-                <input type="text" name="usr_name" placeholder="User Name">
-                <input type="password" name="usr_pw" placeholder="Password">
+                <input type="text" name="usr_name" placeholder="User Name"><br>
+                <input type="password" name="usr_pw" placeholder="Password"><br>
                 <button type="submit">Log In</button>
             </form>
     {% else %}
     	<li>
-          <a><b>{{ session.get("current_user") }}</b></a></li>
+          <a>You are logged in as: <b> {{ session.get("current_user") }}</b></a></li>
           <li><a href="/logout"><b><u>Logout</u></b></a>
       	</li>
 
     <h2>New Message</h2>
 	<form action="{{ url_for('new_msg') }}" method="POST">
-	 	Message:<br>
-	 	<textarea name="msg_content" rows="5" cols="50">Enter text here...</textarea>
+	 	Type your message here:<br>
+	 	<textarea name="msg_content" rows="5" cols="50"></textarea>
 	 	<br><br>
 	 	<input type="submit" value="Submit">
 	</form> 
@@ -38,8 +38,11 @@
 
 
 	<h2>Message List</h2>
+
+	{% if session.get("current_user") == "admin" %}
 	<a href="{{ url_for('clear') }}">clear messages</a>
 	<br><br>
+	{% endif %}
 
 	{% for row in rows %}
 
@@ -48,6 +51,16 @@
 		<i> Date: {{ row["msg_date"] }} </i><br>
 		<i> BTC Price: {{ row["price"] }} </i><br>
 		{{ row["msg_content"] }}
+
+		{% if session.get("current_user") == "admin" %}
+
+		<!--{{ row["rowid"] }}-->
+		<form action="{{ url_for('del_msg') }}" method="POST">
+		 	<input type="submit" value="Delete this">
+		</form> 
+		
+
+		{% endif %}
 
 	</div>
 	<br>

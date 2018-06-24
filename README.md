@@ -14,4 +14,3 @@ Add another board for ETH
 Add option to "bet" with virtual money
 Caching instead of a new API call for each message
 Make it pretty
-Add admin option to: delete message or all messages

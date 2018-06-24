@@ -36,7 +36,7 @@ def list():
    con.row_factory = sql.Row
    
    cur = con.cursor()
-   cur.execute("select * from msg")
+   cur.execute("select rowid, * from msg")
    
    rows = cur.fetchall();
    con.close()
@@ -47,7 +47,7 @@ def list():
 
 @app.route('/login', methods = ['POST'])
 def login():
-	usr_name = request.form.get('usr_name').upper()
+	usr_name = request.form.get('usr_name')
 	if (usr_name in list_users()) and verify(usr_name, request.form.get('usr_pw')):
 		session['current_user'] = usr_name
     
@@ -88,6 +88,10 @@ def clear():
 
 	con.close()
 	return redirect('/')
+
+@app.route('/del_msg')
+def del_msg():
+	pass
 
 if __name__ == '__main__':
    app.run(host='0.0.0.0', debug = True)
