@@ -1,5 +1,5 @@
 # crypto_board
-Simple message board that attached the actual BTC price to each message.
+Simple message board that attaches the actual BTC price to each message.
 
 Uses port 5000.
 
