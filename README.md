@@ -9,8 +9,11 @@ Tested on AWS EC2.
 
 # Plan to improve the site
 
+Add option to "bet" with virtual money:
+	1 add money for each user to DB
+	2 message list: show current money of user
+	3 message list: show transaction performed
+	4 when posting message: buy/sell button
 Add registration option
 Add another board for ETH
-Add option to "bet" with virtual money
-Caching instead of a new API call for each message
-Make it pretty
+Make it pretty & multiline comments
