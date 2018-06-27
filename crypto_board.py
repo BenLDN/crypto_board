@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
 from flask import Flask, render_template, request, redirect, session
+from werkzeug.contrib.cache import SimpleCache
 import sqlite3 as sql
 import get_time_btc_price
 import hashlib
+import datetime
 
 def list_users():
     conn = sql.connect('users.db')
@@ -64,8 +66,18 @@ def new_msg():
 	if request.method == "POST":
 		
 		name = session.get("current_user")
-		msg_date, price = get_time_btc_price.get_time_btc_price()
+		msg_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 		msg_content = request.form['msg_content']
+
+		price = cache.get('btc')
+		   
+		if price is None:
+			price = get_time_btc_price.get_btc_price()
+			cache.set('btc', price, timeout = 60)
+			msg_content+="not cached"
+			
+		
+		
      
 		con = sql.connect("messages.db")
 		cur = con.cursor()
@@ -94,4 +106,5 @@ def del_msg():
 	pass
 
 if __name__ == '__main__':
-   app.run(host='0.0.0.0', debug = True)
+	cache = SimpleCache()
+	app.run(host='0.0.0.0', debug = True)
