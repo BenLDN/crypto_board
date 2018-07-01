@@ -9,9 +9,9 @@ Tested on AWS EC2.
 
 # Plan to improve the site
 
-Add option to "bet" with virtual money:
-	5 when posting message: buy/sell button
-
+Split the main .py file
+Add pagination
+Add transaction costs
 Add registration option
 Add another board for ETH
 Make it pretty & multiline comments

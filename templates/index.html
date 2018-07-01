@@ -15,8 +15,8 @@
 	
     {% if session.get("current_user", None) == None %}
             <form action="/login" method="post">
-                <input type="text" name="usr_name" placeholder="User Name"><br>
-                <input type="password" name="usr_pw" placeholder="Password"><br>
+                <input type="text" name="user_name" placeholder="User Name"><br>
+                <input type="password" name="user_password" placeholder="Password"><br>
                 <button type="submit">Log In</button>
             </form>
     {% else %}
@@ -28,7 +28,10 @@
     <h2>New Message</h2>
 	<form action="{{ url_for('new_msg') }}" method="POST">
 	 	Type your message here:<br>
-	 	<textarea name="msg_content" rows="5" cols="50"></textarea>
+	 	<textarea name="message_content" placeholder="Type your message here" rows="5" cols="50"></textarea><br>
+		<input type="number" name="transaction_amount" placeholder="Amount to buy/sell">
+		<input type="radio" id="buy" name="transaction_type" value="buy" checked="checked"> <label for="buy">buy</label>
+		<input type="radio" id="sell" name="transaction_type" value="sell"> <label for="sell">sell</label>
 	 	<br><br>
 	 	<input type="submit" value="Submit">
 	</form> 
@@ -47,14 +50,15 @@
 	{% for row in rows %}
 
 	<div class="bordered">
-		<b> {{ row["name"] }} </b><br>
-		<i> Date: {{ row["msg_date"] }} </i><br>
-		<i> BTC Price: {{ row["price"] }} </i><br>
-		Buy/(sell): {{ row["buy_amount"]}}
-		BTC: {{ row["new_cash"]}}
-		Cash: {{ row["new_btc"]}}
+		<b> {{ row["user_name"] }} </b><br>
+		<i> Date: {{ row["messsage_date"] }} </i><br>
+		<i> BTC Price: {{ row["btc_price"] }} </i><br>
+		Buy/(sell): {{ row["transaction_amount"] }}
+		BTC: {{ row["new_btc"] }}
+		Cash: {{ row["new_cash"] }}
+		Net worth: {{ row["net_worth"] }}
 		<br>
-		{{ row["msg_content"] }}
+		{{ row["message_content"] }}
 
 		{% if session.get("current_user") == "admin" %}
 
