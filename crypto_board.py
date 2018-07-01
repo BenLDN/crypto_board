@@ -3,7 +3,7 @@
 from flask import Flask, render_template, request, redirect, session
 from werkzeug.contrib.cache import SimpleCache
 import sqlite3 as sql
-import get_time_btc_price
+import get_btc_price
 import hashlib
 import datetime
 
@@ -72,16 +72,17 @@ def new_msg():
 		price = cache.get('btc')
 		   
 		if price is None:
-			price = get_time_btc_price.get_btc_price()
+			price = get_btc_price.get_btc_price()
 			cache.set('btc', price, timeout = 60)
-			msg_content+="not cached"
 			
-		
+		buy_amount=0
+		new_cash=10
+		new_btc=10
 		
      
 		con = sql.connect("messages.db")
 		cur = con.cursor()
-		cur.execute("INSERT INTO msg (name, msg_date, price, msg_content) VALUES (?,?,?,?)",(name, msg_date, price, msg_content))
+		cur.execute("INSERT INTO msg (name, msg_date, price, msg_content, buy_amount, new_cash, new_btc) VALUES (?,?,?,?,?,?,?)",(name, msg_date, price, msg_content, buy_amount, new_cash, new_btc))
         
 		con.commit()
   

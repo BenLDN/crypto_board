@@ -3,7 +3,7 @@
 <style>
   .bordered {
     width: 500px;
-    height: 100px;
+    height: 150px;
     padding: 5px;
     border: 3px solid black;
   }
@@ -50,6 +50,10 @@
 		<b> {{ row["name"] }} </b><br>
 		<i> Date: {{ row["msg_date"] }} </i><br>
 		<i> BTC Price: {{ row["price"] }} </i><br>
+		Buy/(sell): {{ row["buy_amount"]}}
+		BTC: {{ row["new_cash"]}}
+		Cash: {{ row["new_btc"]}}
+		<br>
 		{{ row["msg_content"] }}
 
 		{% if session.get("current_user") == "admin" %}
