@@ -9,7 +9,6 @@ Tested on AWS EC2.
 
 # Plan to improve the site
 
-Add comments
 Add pagination
 Add transaction costs
 Add registration option

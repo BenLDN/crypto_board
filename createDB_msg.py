@@ -1,3 +1,5 @@
+#This script creates the DB for messages, it's not needed after that
+
 import sqlite3
 
 conn = sqlite3.connect('messages.db')

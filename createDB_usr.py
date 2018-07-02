@@ -1,3 +1,5 @@
+#This script creates the DB for users, it's not needed after that
+
 import sqlite3
 import hashlib
 

@@ -1,5 +1,6 @@
 <!doctype html>
 
+<!--Temp style to separate messages-->
 <style>
   .bordered {
     width: 500px;
@@ -13,6 +14,8 @@
    	<body>
    	<h1>Crypto Message Board</h1>
 	
+	<!--Show login page if not logged in-->
+	<!--Show user name if logged in-->
     {% if session.get("current_user", None) == None %}
             <form action="/login" method="post">
                 <input type="text" name="user_name" placeholder="User Name"><br>
@@ -25,6 +28,7 @@
           <li><a href="/logout"><b><u>Logout</u></b></a>
       	</li>
 
+    <!--Input form for a message and a transaction-->
     <h2>New Message</h2>
 	<form action="{{ url_for('new_msg') }}" method="POST">
 	 	Type your message here:<br>
@@ -37,9 +41,7 @@
 	</form> 
     {% endif %}
 
-
-
-
+    <!--Lits of all messages from the DB-->
 	<h2>Message List</h2>
 
 	{% if session.get("current_user") == "admin" %}
@@ -47,11 +49,12 @@
 	<br><br>
 	{% endif %}
 
+	<!--Looping through the list of messages and diplaying each message separately-->
 	{% for row in rows %}
 
 	<div class="bordered">
 		<b> {{ row["user_name"] }} </b><br>
-		<i> Date: {{ row["messsage_date"] }} </i><br>
+		<i> Date: {{ row["message_date"] }} </i><br>
 		<i> BTC Price: {{ row["btc_price"] }} </i><br>
 		Buy/(sell): {{ row["transaction_amount"] }}
 		BTC: {{ row["new_btc"] }}
@@ -59,16 +62,6 @@
 		Net worth: {{ row["net_worth"] }}
 		<br>
 		{{ row["message_content"] }}
-
-		{% if session.get("current_user") == "admin" %}
-
-		<!--{{ row["rowid"] }}-->
-		<form action="{{ url_for('del_msg') }}" method="POST">
-		 	<input type="submit" value="Delete this">
-		</form> 
-		
-
-		{% endif %}
 
 	</div>
 	<br>
