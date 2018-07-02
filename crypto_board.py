@@ -12,9 +12,7 @@ app.secret_key = 'super secret key'
 
 @app.route('/')
 def main_page():
-   
    messages=db_access.list_messages()
-
    return render_template("index.html",rows = messages)
 
 @app.route('/login', methods = ['POST'])

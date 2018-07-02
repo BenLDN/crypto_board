@@ -9,7 +9,7 @@ Tested on AWS EC2.
 
 # Plan to improve the site
 
-Split the main .py file
+Add comments
 Add pagination
 Add transaction costs
 Add registration option
