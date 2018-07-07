@@ -38,6 +38,7 @@
     {% else %}
     	<li>
           <a>You are logged in as: <b> {{ session.get("current_user") }}</b></a></li>
+          btc balance: {{ total_btc }}, cash balance: {{ total_cash }}
           <li><a href="/logout"><b><u>Logout</u></b></a>
       	</li>
 
@@ -58,7 +59,7 @@
 	<h2>Message List</h2>
 
 	{% if session.get("current_user") == "admin" %}
-	<a href="{{ url_for('clear') }}">clear messages and reset balances</a>
+	<a href="{{ url_for('clear_and_reset') }}">clear messages and reset balances</a>
 	<br><br>
 	{% endif %}
 

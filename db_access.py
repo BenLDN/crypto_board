@@ -33,7 +33,11 @@ def clear_and_reset():
 	con.close()
 
 	#reset balances to usd 100k and btc 0
-	
+	con = sql.connect('users.db')
+	con.execute("update usr set total_cash = 100000")
+	con.execute("update usr set total_btc = 0")
+	con.commit()
+	con.close()
 
 #get all messages to be listed as part of the main page (in reverse order to show the newest at the top)
 def list_messages():
@@ -50,10 +54,7 @@ def list_messages():
 def update_user(current_user, transaction_type, transaction_amount, btc_price):
 	
 	#reading current btc & dollar amounts
-	con = sql.connect("users.db")
-	cur = con.cursor()
-	cur.execute("SELECT total_cash, total_btc from usr WHERE user_name=?", (current_user,))
-	old_cash, old_btc = cur.fetchall()[0]
+	old_cash, old_btc = get_usd_and_btc(current_user)
 	
 	#calculating the new btc & dollar amounts after the transaction
 	if transaction_type == "buy":
@@ -65,6 +66,8 @@ def update_user(current_user, transaction_type, transaction_amount, btc_price):
 		new_btc=old_btc+transaction_amount
 
 	#updating the btc & dollar amounts in the DB, returning the new values (as they are needed to post the message)
+	con = sql.connect("users.db")
+	cur = con.cursor()
 	cur.execute("UPDATE usr SET total_cash=?, total_btc=? WHERE user_name=?", (new_cash, new_btc, current_user,))
 	con.commit()
 	con.close()
@@ -78,3 +81,11 @@ def post_message(user_name, message_date, btc_price, message_content, transactio
 	cur.execute("INSERT INTO msg (user_name, message_date, btc_price, message_content, transaction_amount, new_cash, new_btc, net_worth) VALUES (?,?,?,?,?,?,?,?)",(user_name, message_date, btc_price, message_content, transaction_amount, new_cash, new_btc, net_worth))
 	con.commit()
 	con.close()
+
+#get the user's btc and usd balances
+def get_usd_and_btc(current_user):
+	con = sql.connect("users.db")
+	cur = con.cursor()
+	cur.execute("SELECT total_cash, total_btc from usr WHERE user_name=?", (current_user,))
+	total_cash, total_btc = cur.fetchall()[0]
+	return total_cash, total_btc

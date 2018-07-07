@@ -19,8 +19,14 @@ def main_page():
 	messages=db_access.list_messages()
 	total = len(messages)
 	pagination = Pagination(page=page, per_page=per_page, total=total)
-	return render_template("index.html",rows = messages[(page-1)*per_page:page*per_page], pagination=pagination, page=page, per_page=per_page)
-	#[offset: offset + per_page]
+	paginated_messages = messages[(page-1)*per_page:page*per_page]
+
+	total_btc=total_cash=0
+	
+	if "current_user" in session:
+		total_cash, total_btc = db_access.get_usd_and_btc(session.get("current_user"))
+	
+	return render_template("index.html",rows = paginated_messages, pagination=pagination, page=page, per_page=per_page, total_btc=total_btc, total_cash=total_cash)
 
 #redirects to the main page after login
 @app.route('/login', methods = ['POST'])
