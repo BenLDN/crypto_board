@@ -7,8 +7,10 @@ createDB_msg.py and createDB_usr.py: only used to create the SQLite databases (m
 
 # Plan to improve the site
 
-Add pagination
-Add transaction costs
+Show balances when logged in
 Add registration option
-Add another board for ETH
 Make it pretty & allow multiline comments
+Controls and error handling
+Add transaction costs
+Add another board for ETH
+

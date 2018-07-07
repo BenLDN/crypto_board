@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from flask import Flask, render_template, request, redirect, session
+from flask_paginate import Pagination, get_page_parameter
 import sqlite3 as sql
 import get_prices
 import db_access
@@ -13,8 +14,13 @@ app.secret_key = 'super secret key'
 #main page = index.html template populated by the list of messages
 @app.route('/')
 def main_page():
-   messages=db_access.list_messages()
-   return render_template("index.html",rows = messages)
+	page = request.args.get(get_page_parameter(), type=int, default=1)
+	per_page=3
+	messages=db_access.list_messages()
+	total = len(messages)
+	pagination = Pagination(page=page, per_page=per_page, total=total)
+	return render_template("index.html",rows = messages[(page-1)*per_page:page*per_page], pagination=pagination, page=page, per_page=per_page)
+	#[offset: offset + per_page]
 
 #redirects to the main page after login
 @app.route('/login', methods = ['POST'])
@@ -53,10 +59,10 @@ def new_msg():
 
 	return redirect('/')
 
-#redirects to the main page after deleting all messages (only the admin can do this)
-@app.route('/clear')
-def clear():
-	db_access.clear_message_db()
+#redirects to the main page after deleting all messages and reseting usd & btc balances (only the admin can do this)
+@app.route('/clear_and_reset')
+def clear_and_reset():
+	db_access.clear_and_reset()
 	return redirect('/')
 
 if __name__ == '__main__':

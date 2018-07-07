@@ -2,12 +2,25 @@
 
 <!--Temp style to separate messages-->
 <style>
-  .bordered {
+.bordered {
     width: 500px;
     height: 150px;
     padding: 5px;
-    border: 3px solid black;
-  }
+    border: 3px solid black;}
+.pagination-page-info {
+    padding: .6em;
+    padding-left: 0;
+    width: 40em;
+    margin: .5em;
+    margin-left: 0;
+    font-size: 12px;}
+.pagination-page-info b {
+    color: black;
+    background: #6aa6ed;
+    padding-left: 2px;
+    padding: .1em .25em;
+    font-size: 150%;}
+  
 </style>
 
 <html>
@@ -45,11 +58,15 @@
 	<h2>Message List</h2>
 
 	{% if session.get("current_user") == "admin" %}
-	<a href="{{ url_for('clear') }}">clear messages</a>
+	<a href="{{ url_for('clear') }}">clear messages and reset balances</a>
 	<br><br>
 	{% endif %}
 
 	<!--Looping through the list of messages and diplaying each message separately-->
+
+	{{ pagination.info }}
+	{{ pagination.links }}
+
 	{% for row in rows %}
 
 	<div class="bordered">

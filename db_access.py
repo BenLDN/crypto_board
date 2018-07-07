@@ -22,14 +22,18 @@ def verify_login(user_name_check, password_check):
     conn.close()
     return result
 
-#delete all messages -> only the admin can do this
-def clear_message_db():
+#delete all messages and reset balances -> only the admin can do this
+def clear_and_reset():
+	#delete messages
 	con = sql.connect("messages.db")
 	con.row_factory = sql.Row
 	cur = con.cursor()
 	cur.execute("delete from msg")
 	con.commit()
 	con.close()
+
+	#reset balances to usd 100k and btc 0
+	
 
 #get all messages to be listed as part of the main page (in reverse order to show the newest at the top)
 def list_messages():
