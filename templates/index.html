@@ -24,6 +24,17 @@
 </style>
 
 <html>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
    	<body>
    	<h1>Crypto Message Board</h1>
 	
@@ -33,7 +44,7 @@
             <form action="/login" method="post">
                 <input type="text" name="user_name" placeholder="User Name"><br>
                 <input type="password" name="user_password" placeholder="Password"><br>
-                <button type="submit">Log In</button>
+                <button type="submit" name="action" value="login">Log In</button> <button type="submit" name="action" value="signup">Sign Up</button>
             </form>
     {% else %}
     	<li>

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash
 from flask_paginate import Pagination, get_page_parameter
 import sqlite3 as sql
 import get_prices
@@ -31,9 +31,20 @@ def main_page():
 #redirects to the main page after login
 @app.route('/login', methods = ['POST'])
 def login():
+	
 	user_name = request.form.get('user_name')
-	if (user_name in db_access.list_users()) and db_access.verify_login(user_name, request.form.get('user_password')):
-		session['current_user'] = user_name  
+	user_password = request.form.get('user_password')	
+
+	#if the Log In button was press -> login & redirect to main page
+	if request.form.get('action') == "login":
+		if (user_name in db_access.list_users()) and db_access.verify_login(user_name, user_password):
+			session['current_user'] = user_name 
+		return(redirect('/'))
+
+	#if the Sign Up button was press -> register user & redirect to main page
+	if request.form.get('action') == "signup":
+		db_access.register_user(user_name, user_password)
+	
 	return(redirect('/'))
 
 #redirects to the main page after logout
