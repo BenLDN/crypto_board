@@ -71,6 +71,8 @@ def new_msg():
 	new_cash, new_btc = db_access.update_user(session['current_user'], transaction_type, transaction_amount, btc_price)	
 
  	#posting the message - we need the updated btc and dollar balance#
+	if transaction_type == "sell":
+ 		transaction_amount*=-1
 	net_worth=new_cash+new_btc*btc_price
 	db_access.post_message(user_name, message_date, btc_price, message_content, transaction_amount, new_cash, new_btc, net_worth)
 

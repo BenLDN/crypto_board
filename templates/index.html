@@ -2,60 +2,65 @@
 
 <!--Temp style to separate messages-->
 <style>
-.bordered {
-    width: 500px;
-    height: 150px;
-    padding: 5px;
-    border: 3px solid black;}
 .pagination-page-info {
     padding: .6em;
     padding-left: 0;
     width: 40em;
     margin: .5em;
     margin-left: 0;
-    font-size: 12px;}
+    font-size: 12px;
+}
 .pagination-page-info b {
     color: black;
     background: #6aa6ed;
     padding-left: 2px;
     padding: .1em .25em;
-    font-size: 150%;}
+    font-size: 150%;
+
+}
+body {
+	color: #191970;
+	font-family: "Courier New", Courier, monospace;
+	background-color: #CCFFFF;}
+
+img.ico {
+    vertical-align: text-bottom;
+}
+
+.message_content {
+	white-space: pre-wrap;
+	}
   
 </style>
 
 <html>
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
-
    	<body>
-   	<h1>Crypto Message Board</h1>
+   	
+   	<h1> Crypto Message Board</h1>
 	
 	<!--Show login page if not logged in-->
 	<!--Show user name if logged in-->
     {% if session.get("current_user", None) == None %}
-            <form action="/login" method="post">
-                <input type="text" name="user_name" placeholder="User Name"><br>
-                <input type="password" name="user_password" placeholder="Password"><br>
-                <button type="submit" name="action" value="login">Log In</button> <button type="submit" name="action" value="signup">Sign Up</button>
-            </form>
+	<form class="login_form" action="/login" method="post">
+		<input type="text" name="user_name" placeholder="User Name"><br>
+		<input type="password" name="user_password" placeholder="Password"><br>
+		<button type="submit" name="action" value="login">Log In</button> <button type="submit" name="action" value="signup">Sign Up</button>
+	</form>
+    
     {% else %}
-    	<li>
-          <a>You are logged in as: <b> {{ session.get("current_user") }}</b></a></li>
-          btc balance: {{ total_btc }}, cash balance: {{ total_cash }}
-          <li><a href="/logout"><b><u>Logout</u></b></a>
-      	</li>
+    	<div class="login_info">
+          You are logged in as: {{ session.get("current_user") }} 
+          <a href="/logout"><b><u>Log Out</u></b></a> <br>
+          <img class="ico" src="/static/img/btc_logo.png" style="width:20px;height:20px; alt="BTC balance:"> {{ total_btc }}, 
+          <img class="ico" src="/static/img/cash.png" style="width:20px;height:20px; alt="cash balance:"> {{ total_cash }}
+          
+      	</div>
 
     <!--Input form for a message and a transaction-->
     <h2>New Message</h2>
-	<form action="{{ url_for('new_msg') }}" method="POST">
+
+	<form class="new_message_form" action="{{ url_for('new_msg') }}" method="POST">
 	 	Type your message here:<br>
 	 	<textarea name="message_content" placeholder="Type your message here" rows="5" cols="50"></textarea><br>
 		<input type="number" name="transaction_amount" placeholder="Amount to buy/sell">
@@ -81,16 +86,16 @@
 
 	{% for row in rows %}
 
-	<div class="bordered">
+	<div class="messages">
 		<b> {{ row["user_name"] }} </b><br>
 		<i> Date: {{ row["message_date"] }} </i><br>
 		<i> BTC Price: {{ row["btc_price"] }} </i><br>
 		Buy/(sell): {{ row["transaction_amount"] }}
-		BTC: {{ row["new_btc"] }}
-		Cash: {{ row["new_cash"] }}
+		<img class="ico" src="/static/img/btc_logo.png" style="width:20px;height:20px; alt="BTC">: {{ row["new_btc"] }}
+		<img class="ico" src="/static/img/cash.png" style="width:20px;height:20px; alt="cash">: {{ row["new_cash"] }}
 		Net worth: {{ row["net_worth"] }}
 		<br>
-		{{ row["message_content"] }}
+		<div class="message_content">{{ row["message_content"] }}</div>
 
 	</div>
 	<br>
