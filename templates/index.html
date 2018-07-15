@@ -2,34 +2,27 @@
 
 <!--Temp style to separate messages-->
 <style>
-.pagination-page-info {
-    padding: .6em;
-    padding-left: 0;
-    width: 40em;
-    margin: .5em;
-    margin-left: 0;
-    font-size: 12px;
-}
-.pagination-page-info b {
-    color: black;
-    background: #6aa6ed;
-    padding-left: 2px;
-    padding: .1em .25em;
-    font-size: 150%;
 
-}
+
 body {
 	color: #191970;
 	font-family: "Courier New", Courier, monospace;
 	background-color: #CCFFFF;}
 
+li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+	display: inline-block;}
+
 img.ico {
-    vertical-align: text-bottom;
-}
+    vertical-align: text-bottom;}
 
 .message_content {
-	white-space: pre-wrap;
-	}
+	white-space: pre-wrap;}
+
+table, th, td {
+    border: 1px solid black;}
   
 </style>
 
@@ -52,8 +45,8 @@ img.ico {
     	<div class="login_info">
           You are logged in as: {{ session.get("current_user") }} 
           <a href="/logout"><b><u>Log Out</u></b></a> <br>
-          <img class="ico" src="/static/img/btc_logo.png" style="width:20px;height:20px; alt="BTC balance:"> {{ total_btc }}, 
-          <img class="ico" src="/static/img/cash.png" style="width:20px;height:20px; alt="cash balance:"> {{ total_cash }}
+          <img class="ico" src="/static/img/btc_logo.png" style="width:20px;height:20px; alt="BTC balance:"></img> {{ total_btc }}, 
+          <img class="ico" src="/static/img/cash.png" style="width:20px;height:20px; alt="cash balance:"></img> {{ total_cash }}
           
       	</div>
 
@@ -86,18 +79,28 @@ img.ico {
 
 	{% for row in rows %}
 
-	<div class="messages">
-		<b> {{ row["user_name"] }} </b><br>
-		<i> Date: {{ row["message_date"] }} </i><br>
-		<i> BTC Price: {{ row["btc_price"] }} </i><br>
-		Buy/(sell): {{ row["transaction_amount"] }}
-		<img class="ico" src="/static/img/btc_logo.png" style="width:20px;height:20px; alt="BTC">: {{ row["new_btc"] }}
-		<img class="ico" src="/static/img/cash.png" style="width:20px;height:20px; alt="cash">: {{ row["new_cash"] }}
-		Net worth: {{ row["net_worth"] }}
-		<br>
-		<div class="message_content">{{ row["message_content"] }}</div>
+	<table class="messages">
+		<tr><td colspan=3><b> {{ row["user_name"] }} </b><br></td></tr>
+		<tr><td colspan=3><i> Date: {{ row["message_date"] }} </i><br></td></tr>
+		<tr><td colspan=3>
+		{% if row["transaction_amount"] > 0 %}
+		Bought {{ row["transaction_amount"] }}
+		{% endif %}
 
-	</div>
+		{% if row["transaction_amount"] < 0 %}
+		Sold {{ -1 * row["transaction_amount"] }}
+		{% endif %}
+
+		BTC @ the price of {{ row["btc_price"] }} <br></td></tr>
+
+		<tr><td>Total 
+
+		<img class="ico" src="/static/img/btc_logo.png" style="width:20px;height:20px; alt="BTC"></img>: {{ row["new_btc"] }}</td>
+		<td><img class="ico" src="/static/img/cash.png" style="width:20px;height:20px; alt="cash"></img>: {{ row["new_cash"] }}</td>
+		<td>Net worth: {{ row["net_worth"] }} </td></tr>
+		<tr><td colspan=3><div class="message_content">{{ row["message_content"] }}</div></td></tr>
+
+	</table>
 	<br>
 
 	{% endfor %}

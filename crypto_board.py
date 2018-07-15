@@ -15,7 +15,7 @@ app.secret_key = 'super secret key'
 @app.route('/')
 def main_page():
 	page = request.args.get(get_page_parameter(), type=int, default=1)
-	per_page=3
+	per_page=10
 	messages=db_access.list_messages()
 	total = len(messages)
 	pagination = Pagination(page=page, per_page=per_page, total=total)
