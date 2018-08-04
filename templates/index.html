@@ -1,30 +1,9 @@
 <!doctype html>
 
 <!--Temp style to separate messages-->
-<style>
-
-
-body {
-	color: #191970;
-	font-family: "Courier New", Courier, monospace;
-	background-color: #CCFFFF;}
-
-li {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-	display: inline-block;}
-
-img.ico {
-    vertical-align: text-bottom;}
-
-.message_content {
-	white-space: pre-wrap;}
-
-table, th, td {
-    border: 1px solid black;}
-  
-</style>
+<head>
+	<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/crypto.css') }}">
+</head>
 
 <html>
 
@@ -32,9 +11,10 @@ table, th, td {
    	
    	<h1> Crypto Message Board</h1>
 	
-	<!--Show login page if not logged in-->
+	<!--Show login page & help if not logged in-->
 	<!--Show user name if logged in-->
     {% if session.get("current_user", None) == None %}
+	<a href="/whatsthis"><b><u>What is Cypto Message Board?</u></b></a> <br><br>
 	<form class="login_form" action="/login" method="post">
 		<input type="text" name="user_name" placeholder="User Name"><br>
 		<input type="password" name="user_password" placeholder="Password"><br>
@@ -45,8 +25,10 @@ table, th, td {
     	<div class="login_info">
           You are logged in as: {{ session.get("current_user") }} 
           <a href="/logout"><b><u>Log Out</u></b></a> <br>
+          Currently you have: 
           <img class="ico" src="/static/img/btc_logo.png" style="width:20px;height:20px; alt="BTC balance:"></img> {{ total_btc }}, 
-          <img class="ico" src="/static/img/cash.png" style="width:20px;height:20px; alt="cash balance:"></img> {{ total_cash }}
+          <img class="ico" src="/static/img/cash.png" style="width:20px;height:20px; alt="cash balance:"></img> {{ total_cash }} <br>
+          Current spot <img class="ico" src="/static/img/btc_logo.png" style="width:20px;height:20px; alt="BTC"></img>/<img class="ico" src="/static/img/cash.png" style="width:20px;height:20px; alt="USD"></img>: {{ btc_price_main_page }}
           
       	</div>
 

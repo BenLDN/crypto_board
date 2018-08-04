@@ -20,13 +20,14 @@ def main_page():
 	total = len(messages)
 	pagination = Pagination(page=page, per_page=per_page, total=total)
 	paginated_messages = messages[(page-1)*per_page:page*per_page]
+	btc_price_main_page = get_prices.get_btc_price()
 
 	total_btc=total_cash=0
 	
 	if "current_user" in session:
 		total_cash, total_btc = db_access.get_usd_and_btc(session.get("current_user"))
 	
-	return render_template("index.html",rows = paginated_messages, pagination=pagination, page=page, per_page=per_page, total_btc=total_btc, total_cash=total_cash)
+	return render_template("index.html",rows = paginated_messages, pagination=pagination, page=page, per_page=per_page, total_btc=total_btc, total_cash=total_cash, btc_price_main_page=btc_price_main_page)
 
 #redirects to the main page after login
 @app.route('/login', methods = ['POST'])
@@ -38,12 +39,16 @@ def login():
 	#if the Log In button was press -> login & redirect to main page
 	if request.form.get('action') == "login":
 		if (user_name in db_access.list_users()) and db_access.verify_login(user_name, user_password):
-			session['current_user'] = user_name 
+			session['current_user'] = user_name
+		else:
+			return render_template("error.html", err_text="User name or pw is incorrect")
+
 		return(redirect('/'))
 
 	#if the Sign Up button was press -> register user & redirect to main page
 	if request.form.get('action') == "signup":
 		db_access.register_user(user_name, user_password)
+		return render_template("youarein.html")
 	
 	return(redirect('/'))
 
@@ -61,14 +66,29 @@ def new_msg():
 	user_name = session.get("current_user")
 	message_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 	message_content = request.form['message_content']
-	transaction_amount=int(request.form['transaction_amount'])
+	try:
+		transaction_amount=int(request.form['transaction_amount'])
+	except: return render_template("error.html", err_text="Transaction amount wasn't given. (It can be zero, but not empty)")
+
 	transaction_type=request.form['transaction_type']
+
+	#error handling: transaction amount can't be negative  & max message size is 512
+	if transaction_amount < 0:
+		return render_template("error.html", err_text="Transaction amount can't be negative")
+	if len(message_content) > 512:
+		return render_template("error.html", err_text="Number of characters in the message is limited to 512")
 
 	#get the current price
 	btc_price = get_prices.get_btc_price()
 
 	#updating the user's dollar and btc balance and returning the new balances
 	new_cash, new_btc = db_access.update_user(session['current_user'], transaction_type, transaction_amount, btc_price)	
+
+	#error handling: if the return values are 0,-1 or -1,0 -> the transaction was unsuccessful
+	if new_cash == -1 and new_btc == 0:
+		return render_template("error.html", err_text="You don't have enough cash to buy that much BTC")
+	if new_cash == 0 and new_btc == -1:
+		return render_template("error.html", err_text="You don't that much BTC")
 
  	#posting the message - we need the updated btc and dollar balance#
 	if transaction_type == "sell":
@@ -83,6 +103,10 @@ def new_msg():
 def clear_and_reset():
 	db_access.clear_and_reset()
 	return redirect('/')
+
+@app.route('/whatsthis')
+def describe_the_site():
+	return render_template("whatsthis.html")
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', debug = True)

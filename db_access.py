@@ -66,6 +66,12 @@ def update_user(current_user, transaction_type, transaction_amount, btc_price):
 		new_cash=old_cash-btc_price*transaction_amount
 		new_btc=old_btc+transaction_amount
 
+	#error check: if the transaction would result in a negative cash or btc value -> return -1,0 or 0,-1 and don't change anything in the DB
+	if new_cash < 0:
+		return -1, 0
+	if new_btc < 0:
+		return 0, -1
+
 	#updating the btc & dollar amounts in the DB, returning the new values (as they are needed to post the message)
 	set_usd_and_btc(current_user, new_btc, new_cash)
 

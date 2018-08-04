@@ -7,12 +7,7 @@ createDB_msg.py and createDB_usr.py: only used to create the SQLite databases (m
 
 # Plan to improve the site
 
-Add description of the page
-Controls and error handling:
-	accept only positive number
-	can't sell more than inventory
-	money can't go to negative
-	max message size
 Add transaction costs
 Template structure
+Styling
 
