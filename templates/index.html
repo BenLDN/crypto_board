@@ -20,6 +20,9 @@
 		<input type="password" name="user_password" placeholder="Password"><br>
 		<button type="submit" name="action" value="login">Log In</button> <button type="submit" name="action" value="signup">Sign Up</button>
 	</form>
+	<br>
+
+	Current spot <img class="ico" src="/static/img/btc_logo.png" style="width:20px;height:20px; alt="BTC"></img>/<img class="ico" src="/static/img/cash.png" style="width:20px;height:20px; alt="USD"></img>: {{ btc_price_main_page }}
     
     {% else %}
     	<div class="login_info">
@@ -28,6 +31,7 @@
           Currently you have: 
           <img class="ico" src="/static/img/btc_logo.png" style="width:20px;height:20px; alt="BTC balance:"></img> {{ total_btc }}, 
           <img class="ico" src="/static/img/cash.png" style="width:20px;height:20px; alt="cash balance:"></img> {{ total_cash }} <br>
+          Net worth: {{ total_cash + total_btc * btc_price_main_page }} <br>
           Current spot <img class="ico" src="/static/img/btc_logo.png" style="width:20px;height:20px; alt="BTC"></img>/<img class="ico" src="/static/img/cash.png" style="width:20px;height:20px; alt="USD"></img>: {{ btc_price_main_page }}
           
       	</div>
@@ -45,6 +49,7 @@
 	 	<input type="submit" value="Submit">
 	</form> 
     {% endif %}
+
 
     <!--Lits of all messages from the DB-->
 	<h2>Message List</h2>

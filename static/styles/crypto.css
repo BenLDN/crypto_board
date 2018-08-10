@@ -16,6 +16,11 @@ img.ico {
 .message_content {
 	white-space: pre-wrap;}
 
+.pagination {
+    letter-spacing: 10px;}
+
+#pagination a:link { color: #70DB93; }
+
 table, th, td {
     border: 1px solid black;}
  

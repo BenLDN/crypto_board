@@ -7,6 +7,7 @@ createDB_msg.py and createDB_usr.py: only used to create the SQLite databases (m
 
 # Plan to improve the site
 
+fix pagination
 Add transaction costs
 Template structure
 Styling
