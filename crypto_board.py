@@ -7,9 +7,11 @@ import get_prices
 import db_access
 import hashlib
 import datetime
+from werkzeug.wsgi import DispatcherMiddleware
 
 app = Flask(__name__)
 app.secret_key = 'super secret key'
+app.config["APPLICATION_ROOT"] = "/crypto-board"
 
 #main page = index.html template populated by the list of messages
 @app.route('/')
@@ -107,6 +109,8 @@ def clear_and_reset():
 @app.route('/whatsthis')
 def describe_the_site():
 	return render_template("whatsthis.html")
+
+app.wsgi_app = DispatcherMiddleware(main_page, {'/crypto-board': app.wsgi_app})
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', debug = True)
