@@ -14,8 +14,8 @@
 	<!--Show login page & help if not logged in-->
 	<!--Show user name if logged in-->
     {% if session.get("current_user", None) == None %}
-	<a href="/whatsthis"><b><u>What is Cypto Message Board?</u></b></a> <br><br>
-	<form class="login_form" action="/login" method="post">
+	<a href="{{ prefix }}/whatsthis"><b><u>What is Cypto Message Board?</u></b></a> <br><br>
+	<form class="login_form" action="{{ prefix }}/login" method="post">
 		<input type="text" name="user_name" placeholder="User Name"><br>
 		<input type="password" name="user_password" placeholder="Password"><br>
 		<button type="submit" name="action" value="login">Log In</button> <button type="submit" name="action" value="signup">Sign Up</button>
@@ -27,7 +27,7 @@
     {% else %}
     	<div class="login_info">
           You are logged in as: {{ session.get("current_user") }} 
-          <a href="/logout"><b><u>Log Out</u></b></a> <br>
+          <a href="{{ prefix }}/logout"><b><u>Log Out</u></b></a> <br>
           Currently you have: 
           <img class="ico" src="/static/img/btc_logo.png" style="width:20px;height:20px; alt="BTC balance:"></img> {{ total_btc }}, 
           <img class="ico" src="/static/img/cash.png" style="width:20px;height:20px; alt="cash balance:"></img> {{ total_cash }} <br>

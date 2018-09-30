@@ -8,11 +8,14 @@ import db_access
 import hashlib
 import datetime
 
+
 app = Flask(__name__)
 app.secret_key = 'super secret key'
+app.config['APPLICATION_ROOT'] = "/crypto-board"
+prefix="/crypto-board"
 
 #main page = index.html template populated by the list of messages
-@app.route('/')
+@app.route(prefix+'/')
 def main_page():
 	page = request.args.get(get_page_parameter(), type=int, default=1)
 	per_page=10
@@ -27,10 +30,10 @@ def main_page():
 	if "current_user" in session:
 		total_cash, total_btc = db_access.get_usd_and_btc(session.get("current_user"))
 	
-	return render_template("index.html",rows = paginated_messages, pagination=pagination, page=page, per_page=per_page, total_btc=total_btc, total_cash=total_cash, btc_price_main_page=btc_price_main_page)
+	return render_template("index.html",rows = paginated_messages, pagination=pagination, page=page, per_page=per_page, total_btc=total_btc, total_cash=total_cash, btc_price_main_page=btc_price_main_page, prefix=prefix)
 
 #redirects to the main page after login
-@app.route('/login', methods = ['POST'])
+@app.route(prefix+'/login', methods = ['POST'])
 def login():
 	
 	user_name = request.form.get('user_name')
@@ -41,25 +44,25 @@ def login():
 		if (user_name in db_access.list_users()) and db_access.verify_login(user_name, user_password):
 			session['current_user'] = user_name
 		else:
-			return render_template("error.html", err_text="User name or pw is incorrect")
+			return render_template("error.html", err_text="User name or pw is incorrect", prefix=prefix)
 
-		return(redirect('/'))
+		return(redirect(prefix+'/'))
 
 	#if the Sign Up button was press -> register user & redirect to main page
 	if request.form.get('action') == "signup":
 		db_access.register_user(user_name, user_password)
-		return render_template("youarein.html")
+		return render_template("youarein.html", prefix=prefix)
 	
-	return(redirect('/'))
+	return(redirect(prefix+'/'))
 
 #redirects to the main page after logout
-@app.route("/logout/")
+@app.route(prefix+"/logout/")
 def logout():
     session.pop("current_user", None)
-    return(redirect('/'))
+    return(redirect(prefix+'/'))
 
 #redirects to the main page after updating the user's money and btc in the database and posting the message
-@app.route('/new_msg', methods = ['POST'])
+@app.route(prefix+'/new_msg', methods = ['POST'])
 def new_msg():
 
 	#reading data from the form
@@ -68,15 +71,15 @@ def new_msg():
 	message_content = request.form['message_content']
 	try:
 		transaction_amount=int(request.form['transaction_amount'])
-	except: return render_template("error.html", err_text="Transaction amount wasn't given. (It can be zero, but not empty)")
+	except: return render_template("error.html", err_text="Transaction amount wasn't given. (It can be zero, but not empty)", prefix=prefix)
 
 	transaction_type=request.form['transaction_type']
 
 	#error handling: transaction amount can't be negative  & max message size is 512
 	if transaction_amount < 0:
-		return render_template("error.html", err_text="Transaction amount can't be negative")
+		return render_template("error.html", err_text="Transaction amount can't be negative", prefix=prefix)
 	if len(message_content) > 512:
-		return render_template("error.html", err_text="Number of characters in the message is limited to 512")
+		return render_template("error.html", err_text="Number of characters in the message is limited to 512", prefix=prefix)
 
 	#get the current price
 	btc_price = get_prices.get_btc_price()
@@ -86,9 +89,9 @@ def new_msg():
 
 	#error handling: if the return values are 0,-1 or -1,0 -> the transaction was unsuccessful
 	if new_cash == -1 and new_btc == 0:
-		return render_template("error.html", err_text="You don't have enough cash to buy that much BTC")
+		return render_template("error.html", err_text="You don't have enough cash to buy that much BTC", prefix=prefix)
 	if new_cash == 0 and new_btc == -1:
-		return render_template("error.html", err_text="You don't that much BTC")
+		return render_template("error.html", err_text="You don't that much BTC", prefix=prefix)
 
  	#posting the message - we need the updated btc and dollar balance#
 	if transaction_type == "sell":
@@ -96,17 +99,17 @@ def new_msg():
 	net_worth=new_cash+new_btc*btc_price
 	db_access.post_message(user_name, message_date, btc_price, message_content, transaction_amount, new_cash, new_btc, net_worth)
 
-	return redirect('/')
+	return redirect(prefix+'/')
 
 #redirects to the main page after deleting all messages and reseting usd & btc balances (only the admin can do this)
-@app.route('/clear_and_reset')
+@app.route(prefix+'/clear_and_reset')
 def clear_and_reset():
 	db_access.clear_and_reset()
-	return redirect('/')
+	return redirect(prefix+'/')
 
-@app.route('/whatsthis')
+@app.route(prefix+'/whatsthis')
 def describe_the_site():
-	return render_template("whatsthis.html")
+	return render_template("whatsthis.html", prefix=prefix)
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', debug = True)
