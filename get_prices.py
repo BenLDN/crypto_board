@@ -8,9 +8,9 @@ cache = SimpleCache()
 
 def get_btc_price_API():
 
-	r = requests.get('https://api.coinmarketcap.com/v1/ticker/bitcoin/')
+	r = requests.get('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD&e=Coinbase')
 
-	price_float = float(r.json()[0]["price_usd"])
+	price_float = float(r.json()['USD'])
 	price=int(round(price_float))
 
 	return price
@@ -30,3 +30,4 @@ def get_btc_price():
 		new_btc=10
 
 	return btc_price
+
