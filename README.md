@@ -1,10 +1,13 @@
 CryptoBoard
 ===========
 
+Warning
+-------
+I created this a long time ago and it's **not** maintained anymore.
+
 What is this?
 -------------
 Simple message board where each message is a simulated bitcoin buy or sell transaction.  
-**It is not maintained or hosted anywhere.**
 
 User and message database
 -------------------------
